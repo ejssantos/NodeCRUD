@@ -21,6 +21,8 @@
     "express": "^4.17.1",
     "express-handlebars": "^6.0.2",
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "to": "^0.2.9",
+    "update": "^0.7.4"
   }
 }
