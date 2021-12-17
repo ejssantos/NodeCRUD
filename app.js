@@ -36,7 +36,7 @@ app.set('view engine', 'handlebars');
 
 app.use('/css', express.static('css'));
 app.use('/js', express.static('js'));
-//app.use('/img', express.static('img'));
+app.use('/img', express.static('img'));
 
 
 //======================================
@@ -51,6 +51,7 @@ app.get("/", function(req, res){
     //res.render('index', {id:req.params.id});
     res.render('index');
 });
+
 
 app.get("/javascript", function(req, res){
     res.sendFile(__dirname+'/js/javascript.js');
@@ -70,6 +71,28 @@ app.post("/controllerForm", urlEncodeParser, function(req, res){
     res.render('controllerForm');
 });
 
+app.get("/select/:id?", function(req, res){
+    if(!req.params.id){
+        //res.send("Existe");
+        sql.query("select * from nodejs.user order by id asc", function(err, results, fields){
+            res.render('select', {data:results});
+            //res.send(results);
+        });
+    }
+    else{
+        sql.query("select * from nodejs.user where id=? order by id asc", [req.params.id], function(err, results, fields){
+            res.render("select", {data:results});
+        });
+    }
+    //res.render("select");
+});
+
+app.get("/deletar/:id", function(req, res){
+    sql.query("delete from nodejs.user where id=?", [req.params.id]);
+    res.render("deletar");
+    //res.send(req.params.id);
+});
+
 
 //======================================
 //Start server
@@ -77,3 +100,13 @@ app.post("/controllerForm", urlEncodeParser, function(req, res){
 app.listen(3000, function(re, res){
     console.log('Servidor executando...');
 });
+
+
+/**Exceções ocorridas durante o desenvolvimento:
+ * 
+ * ER_TRUNCATED_WRONG_VALUE
+ *      Resolvida com as seguintes instruções no MySQL
+ *          set session sql_mode="NO_ENGINE_SUBSTITUTION";
+ *          set global sql_mode="NO_ENGINE_SUBSTITUTION";
+ *      Fonte: https://www.ti-enxame.com/pt/javascript/er-truncated-wrong-value-valor-incorreto-da-data-e-hora/832026789/
+*/
